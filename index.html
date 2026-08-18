@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Embongan Oleh Hidayah — Kitab Sholawat Digital untuk Baginda Nabi ﷺ" />
+  <title>Embongan Oleh Hidayah</title>
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+  <!-- ============ HEADER / NAVBAR ============ -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <a href="#/" class="logo" onclick="App.navigate('home')">
+        <span class="logo-icon">☪</span>
+        <span class="logo-text">Buku<span class="gold"> Sholawat</span></span>
+      </a>
+
+      <nav class="nav-desktop">
+        <a href="#/" class="nav-link active" data-nav="home">
+          <i data-lucide="book-open" class="icon-sm"></i> Lirik Sholawat
+        </a>
+        <a href="#/favorites" class="nav-link" data-nav="favorites">
+          <i data-lucide="heart" class="icon-sm"></i> Favorite
+        </a>
+        <a href="#/tambah" class="nav-link" data-nav="tambah">
+          <i data-lucide="plus-circle" class="icon-sm"></i> Tambah Sholawat
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" id="btn-theme" title="Mode Malam" onclick="App.toggleTheme()">
+          <i data-lucide="moon" class="icon-sm" id="theme-icon"></i>
+        </button>
+        <button class="icon-btn user-btn" id="btn-user" title="Akun" onclick="App.navigate('login')">
+          <i data-lucide="user" class="icon-sm"></i>
+        </button>
+        <button class="hamburger" id="btn-hamburger" onclick="App.toggleMenu()">
+          <i data-lucide="menu" class="icon-sm"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#/" class="mobile-link" data-nav="home" onclick="App.navigate('home'); App.closeMenu();">
+        <i data-lucide="book-open" class="icon-sm"></i> Lirik Sholawat
+      </a>
+      <a href="#/favorites" class="mobile-link" data-nav="favorites" onclick="App.navigate('favorites'); App.closeMenu();">
+        <i data-lucide="heart" class="icon-sm"></i> Favorite
+      </a>
+      <a href="#/tambah" class="mobile-link" data-nav="tambah" onclick="App.navigate('tambah'); App.closeMenu();">
+        <i data-lucide="plus-circle" class="icon-sm"></i> Tambah Sholawat
+      </a>
+      <hr class="mobile-divider" />
+      <a href="#/login" class="mobile-link" data-nav="login" onclick="App.navigate('login'); App.closeMenu();">
+        <i data-lucide="log-in" class="icon-sm"></i> <span id="mobile-user-label">Masuk</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="main" id="main">
+
+    <!-- ===== VIEW: HOME (Landing Page) ===== -->
+    <section class="view active" id="view-home">
+      <div class="container">
+        <!-- Hero Heading -->
+        <div class="hero-heading">
+          <div class="ornament">﷽</div>
+          <h1 class="hero-title">Kitab Sholawat untuk<br /><span class="gold">Baginda Nabi ﷺ</span></h1>
+          <p class="hero-subtitle">Lantunan cinta, sejuk di hati. Kumpulan sholawat pilihan untuk mendekatkan diri kepada Rasulullah ﷺ.</p>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="toolbar">
+          <div class="search-box">
+            <i data-lucide="search" class="icon-sm search-icon"></i>
+            <input type="text" id="search-input" placeholder="Cari judul sholawat..." oninput="App.handleSearch(this.value)" />
+            <button class="search-clear" id="search-clear" onclick="App.clearSearch()" style="display:none;">
+              <i data-lucide="x" class="icon-sm"></i>
+            </button>
+          </div>
+          <div class="filter-group">
+            <select id="filter-sort" onchange="App.handleSort(this.value)">
+              <option value="newest">Terbaru</option>
+              <option value="oldest">Terlama</option>
+              <option value="az">A → Z</option>
+              <option value="za">Z → A</option>
+              <option value="favorite">Favorit</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Sholawat Count -->
+        <div class="list-info">
+          <span id="sholawat-count">Memuat...</span>
+        </div>
+
+        <!-- Sholawat List -->
+        <div class="sholawat-list" id="sholawat-list">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Memuat kitab sholawat...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== VIEW: DETAIL ===== -->
+    <section class="view" id="view-detail">
+      <div class="container">
+        <button class="back-btn" onclick="App.navigate('home')">
+          <i data-lucide="arrow-left" class="icon-sm"></i> Kembali ke Daftar
+        </button>
+
+        <article class="detail-card" id="detail-card">
+          <div class="detail-header">
+            <span class="detail-category" id="detail-category">Kategori</span>
+            <h1 class="detail-title" id="detail-title">Judul Sholawat</h1>
+            <div class="detail-meta">
+              <span><i data-lucide="calendar" class="icon-sm"></i> <span id="detail-date"></span></span>
+              <span><i data-lucide="eye" class="icon-sm"></i> <span id="detail-views"></span></span>
+            </div>
+          </div>
+
+                    <div class="detail-lyrics" id="detail-lyrics">
+            <!-- Lyrics HTML rendered here -->
+          </div>
+
+          <!-- AUDIO PLAYER -->
+          <div class="audio-section" id="audio-section" style="display:none;">
+            <div class="audio-header">
+              <i data-lucide="music" class="icon-sm"></i>
+              <span>Audio Sholawat</span>
+            </div>
+            
+            <!-- Native Audio Player (untuk MP3 direct link) -->
+            <audio id="audio-player" controls class="audio-player-native">
+              <source src="" type="audio/mpeg" />
+              Browser Anda tidak mendukung pemutar audio.
+            </audio>
+
+            <!-- TikTok Embed Container -->
+            <div id="tiktok-embed" class="tiktok-embed" style="display:none;">
+              <!-- TikTok iframe akan di-insert di sini -->
+            </div>
+
+            <!-- External Link -->
+            <a href="#" id="audio-external-link" target="_blank" rel="noopener" class="audio-external-link">
+              <i data-lucide="external-link" class="icon-sm"></i>
+              <span>Buka di Sumber</span>
+            </a>
+
+            <p class="audio-note">
+              <i data-lucide="info" class="icon-sm"></i>
+              <span id="audio-source-text">Sumber audio eksternal</span>
+            </p>
+          </div>
+
+          <div class="detail-actions">
+            <button class="btn btn-fav" id="btn-detail-fav" onclick="App.toggleFavoriteDetail()">
+              <i data-lucide="heart" class="icon-sm" id="detail-fav-icon"></i>
+              <span id="detail-fav-text">Favorit</span>
+            </button>
+          </div>
+
+          <div class="detail-nav">
+            <button class="btn btn-outline" id="btn-prev" onclick="App.navigatePrev()">
+              <i data-lucide="chevron-left" class="icon-sm"></i> Sebelumnya
+            </button>
+            <button class="btn btn-outline" id="btn-next" onclick="App.navigateNext()">
+              Selanjutnya <i data-lucide="chevron-right" class="icon-sm"></i>
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== VIEW: FAVORITES ===== -->
+    <section class="view" id="view-favorites">
+      <div class="container">
+        <div class="page-header">
+          <h2 class="page-title"><i data-lucide="heart" class="icon-sm gold"></i> Sholawat Favorit</h2>
+          <p class="page-subtitle">Kumpulan sholawat yang kamu simpan</p>
+        </div>
+        <div class="sholawat-list" id="favorites-list">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Memuat favorit...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== VIEW: TAMBAH SHOLAWAT ===== -->
+    <section class="view" id="view-tambah">
+      <div class="container">
+        <div class="page-header">
+          <h2 class="page-title"><i data-lucide="plus-circle" class="icon-sm gold"></i> Tambah Sholawat Baru</h2>
+          <p class="page-subtitle">Tambahkan lirik sholawat ke dalam kitab digital</p>
+        </div>
+
+        <form class="form-card" id="form-tambah" onsubmit="App.submitSholawat(event)">
+          <div class="form-group">
+            <label for="input-judul">Judul Sholawat *</label>
+            <input type="text" id="input-judul" placeholder="Contoh: Sholawat Badar" required />
+          </div>
+
+          <div class="form-group">
+            <label for="input-kategori">Kategori *</label>
+            <select id="input-kategori" required>
+              <option value="">Pilih kategori...</option>
+              <option value="Suluk Arab">Suluk Arab</option>
+              <option value="Suluk Jawa">Suluk Jawa</option>
+              <option value="Pelan">Pelan</option>
+              <option value="Arab (Biasa)">Arab (Biasa)</option>
+              <option value="Indonesia">Indonesia</option>
+              <option value="Jawa">Jawa</option>
+              <option value="Gambus">Gambus</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Lirik Sholawat *</label>
+            <!-- Rich Text Toolbar -->
+            <div class="editor-toolbar" id="editor-toolbar">
+              <button type="button" class="tool-btn" onclick="App.editorCmd('insertOrderedList')" title="List Nomor">
+                <i data-lucide="list-ordered" class="icon-sm"></i>
+              </button>
+              <button type="button" class="tool-btn" onclick="App.editorCmd('insertUnorderedList')" title="List Bullet">
+                <i data-lucide="list" class="icon-sm"></i>
+              </button>
+              <span class="tool-divider"></span>
+              <button type="button" class="tool-btn" onclick="App.editorCmd('justifyLeft')" title="Rata Kiri">
+                <i data-lucide="align-left" class="icon-sm"></i>
+              </button>
+              <button type="button" class="tool-btn" onclick="App.editorCmd('justifyCenter')" title="Rata Tengah">
+                <i data-lucide="align-center" class="icon-sm"></i>
+              </button>
+              <button type="button" class="tool-btn" onclick="App.editorCmd('justifyRight')" title="Rata Kanan">
+                <i data-lucide="align-right" class="icon-sm"></i>
+              </button>
+              <button type="button" class="tool-btn" onclick="App.editorCmd('justifyFull')" title="Rata Kiri-Kanan">
+                <i data-lucide="align-justify" class="icon-sm"></i>
+              </button>
+              <span class="tool-divider"></span>
+              <button type="button" class="tool-btn" onclick="App.editorCmd('indent')" title="Tabulasi (Indent)">
+                <i data-lucide="indent" class="icon-sm"></i>
+              </button>
+              <button type="button" class="tool-btn" onclick="App.editorCmd('outdent')" title="Outdent">
+                <i data-lucide="outdent" class="icon-sm"></i>
+              </button>
+              <span class="tool-divider"></span>
+              <button type="button" class="tool-btn" onclick="App.insertLink()" title="Tambah Link">
+                <i data-lucide="link" class="icon-sm"></i>
+              </button>
+              <button type="button" class="tool-btn" onclick="App.insertImage()" title="Embed Gambar (URL)">
+                <i data-lucide="image" class="icon-sm"></i>
+              </button>
+              <span class="tool-divider"></span>
+              <button type="button" class="tool-btn" onclick="App.editorCmd('bold')" title="Tebal">
+                <i data-lucide="bold" class="icon-sm"></i>
+              </button>
+              <button type="button" class="tool-btn" onclick="App.editorCmd('italic')" title="Miring">
+                <i data-lucide="italic" class="icon-sm"></i>
+              </button>
+            </div>
+            <!-- Editable Area -->
+            <div class="editor-area" id="editor-area" contenteditable="true" data-placeholder="Tulis lirik sholawat di sini..."></div>
+                        <!-- Audio URL Input -->
+            <div class="audio-url-group">
+              <label for="input-audio-url">
+                <i data-lucide="music" class="icon-sm"></i>
+                Link Audio (Opsional)
+              </label>
+              <input 
+                type="url" 
+                id="input-audio-url" 
+                placeholder="https://tiktok.com/@user/video/... atau link MP3"
+              />
+              <p class="audio-hint">
+                Support: 
+                <code>MP3</code> direct link, 
+                <code>TikTok</code> video URL, 
+                <code>SoundCloud</code>, 
+                <code>YouTube</code>
+              </p>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btn-submit-sholawat">
+              <i data-lucide="save" class="icon-sm"></i> Simpan Sholawat
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===== VIEW: LOGIN ===== -->
+    <section class="view" id="view-login">
+      <div class="container">
+        <div class="login-card">
+          <div class="login-icon">☪</div>
+          <h2 class="login-title">Masuk ke Nurul Sholawat</h2>
+          <p class="login-subtitle">Gunakan nomor HP yang sudah terdaftar untuk masuk</p>
+
+          <form class="login-form" id="form-login" onsubmit="App.handleLogin(event)">
+            <div class="form-group">
+              <label for="input-phone">Nomor HP Terdaftar</label>
+              <div class="phone-input">
+                <span class="phone-prefix">+62</span>
+                <input type="tel" id="input-phone" placeholder="81234567890" maxlength="12" pattern="[0-9]{9,12}" required oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+              </div>
+              <p class="form-hint">Masukkan nomor HP yang telah didaftarkan oleh admin</p>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="btn-login">
+              <i data-lucide="log-in" class="icon-sm"></i> Masuk
+            </button>
+          </form>
+
+          <div id="login-status" class="login-status" style="display:none;"></div>
+
+          <div class="login-logged" id="login-logged" style="display:none;">
+            <div class="logged-info">
+              <i data-lucide="check-circle" class="icon-sm green"></i>
+              <span>Kamu masuk sebagai <strong id="logged-name"></strong></span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="App.logout()">
+              <i data-lucide="log-out" class="icon-sm"></i> Keluar
+            </button>
+          </div>
+
+          <div class="login-help">
+            <p class="help-title">Belum punya akun?</p>
+            <p class="help-text">
+              Hubungi admin untuk mendaftarkan nomor HP kamu.<br/>
+              <a href="mailto:admin@embohmedia.com" class="help-link">
+                <i data-lucide="mail" class="icon-sm"></i> admin@embohmedia.com
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo-icon">☪</span>
+          <span>Nurul Sholawat</span>
+        </div>
+        <p class="footer-copy">© 2014 <strong>Emboh Media</strong>. Semua hak dilindungi.</p>
+        <p class="footer-dua">اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِ سَيِّدِنَا مُحَمَّدٍ</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ TOAST ============ -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+Light Mode:
+  Background   : #faf7f2 (warm cream)
+  Card         : #ffffff
+  Primary      : #0d6b4e (Islamic green)
+  Accent/Gold  : #c9952d (gold)
+  Text         : #1e293b
+  Muted        : #64748b
+
+Dark Mode (Mode Malam):
+  Background   : #0c1222 (deep night)
+  Card         : #162032
+  Primary      : #34d399 (emerald)
+  Accent/Gold  : #fbbf24
+  Text         : #e2e8f0
+  Muted        : #94a3b8
+
+nurul-sholawat/
+├── index.html
+├── .nojekyll
+├── css/
+│   └── main.css
+├── js/
+│   └── app.js
+└── assets/
+    └── pattern.svg    (opsional: Islamic geometric pattern)
